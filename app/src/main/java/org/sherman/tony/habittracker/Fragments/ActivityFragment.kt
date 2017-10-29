@@ -1,6 +1,5 @@
 package org.sherman.tony.habittracker.Fragments
 
-
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater

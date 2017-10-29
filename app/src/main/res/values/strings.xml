@@ -1,6 +1,9 @@
 <resources>
-    <string name="app_name">Habit Tracker</string>
+    <string name="app_name">Seinfeld Success Tracker</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="masterLinkCount">Seinfeld Count:</string>
+    <string name="menuHabit">Habit</string>
+    <string name="menuSettings">Settings</string>
 </resources>

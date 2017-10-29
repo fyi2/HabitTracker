@@ -1,7 +1,15 @@
 package org.sherman.tony.habittracker.Models
 
-/**
- * Created by Admin on 10/29/2017.
- */
-class Activity {
+class Activity() {
+    var activityID: Int? = null
+    var activityDate:Long? = null
+    var activityHabitKey: Int? = null
+
+    constructor(activityID:Int, activityDate:Long, activityHabitKey:Int): this() {
+        this.activityID = activityID
+        this.activityDate = activityDate
+        this.activityHabitKey = activityHabitKey
+
+    }
+
 }

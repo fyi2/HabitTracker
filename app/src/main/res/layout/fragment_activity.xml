@@ -2,12 +2,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.sherman.tony.habittracker.Fragments.ActivityFragment">
+    tools:context="org.sherman.tony.habittracker.Fragment.ActivityFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+        <ExpandableListView
+            android:id="@+id/expandableListViewID"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            />
+    </RelativeLayout>
 </FrameLayout>
