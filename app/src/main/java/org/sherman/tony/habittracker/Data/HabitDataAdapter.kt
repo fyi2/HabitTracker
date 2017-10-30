@@ -10,6 +10,8 @@ import android.util.Log
 import org.sherman.tony.habittracker.Data.*
 import org.sherman.tony.habittracker.Models.Activity
 import org.sherman.tony.habittracker.Models.Habit
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 
 class HabitDataAdapter(context: Context): SQLiteOpenHelper(context,DATABASE_NAME, null,DATABASE_VERSION) {
@@ -53,7 +55,8 @@ class HabitDataAdapter(context: Context): SQLiteOpenHelper(context,DATABASE_NAME
         var db: SQLiteDatabase = writableDatabase
         var values = ContentValues()
         // create a habit table entry
-        values.put(KEY_HABIT_NAME, habit)
+        val mHabit = habit.trim().capitalize()
+        values.put(KEY_HABIT_NAME, mHabit)
         values.put(KEY_HABIT_ACTIVE,1)
 
         // Open an initial entry
@@ -61,11 +64,22 @@ class HabitDataAdapter(context: Context): SQLiteOpenHelper(context,DATABASE_NAME
         Log.d(DEBUG,"Habits database updated")
     }
 
-    fun readHabit(habitName:String):Habit{
+    fun habitExists(habitName: String):Boolean{
         var db: SQLiteDatabase = readableDatabase
+        val mHabitName = habitName.trim().capitalize()
         var habit = Habit()
         var cursor: Cursor = db.query(TABLE_HABITS, arrayOf(KEY_HABIT_ID, KEY_HABIT_NAME, KEY_HABIT_ACTIVE),
-                KEY_HABIT_NAME+"=?", arrayOf(habitName), null, null, null)
+                KEY_HABIT_NAME+"=?", arrayOf(mHabitName), null, null, null)
+
+        return cursor.moveToFirst()
+    }
+
+    fun readHabit(habitName:String):Habit{
+        var db: SQLiteDatabase = readableDatabase
+        val mHabitName = habitName.trim().capitalize()
+        var habit = Habit()
+        var cursor: Cursor = db.query(TABLE_HABITS, arrayOf(KEY_HABIT_ID, KEY_HABIT_NAME, KEY_HABIT_ACTIVE),
+                KEY_HABIT_NAME+"=?", arrayOf(mHabitName), null, null, null)
 
         if (cursor.moveToFirst()){
 
@@ -90,13 +104,26 @@ class HabitDataAdapter(context: Context): SQLiteOpenHelper(context,DATABASE_NAME
                 habit.habitName = cursor.getString(cursor.getColumnIndex(KEY_HABIT_NAME))
                 habit.habitActive = cursor.getInt(cursor.getColumnIndex(KEY_HABIT_ACTIVE))
                 list.add(habit)
+                Log.d(DEBUG,habit.habitID.toString())
             }while (cursor.moveToNext())
         }
+        //db.close()
+        //printList(list)
         return list
     }
 
-    fun deleteHabit(habit: String) {
-        // Set habit to inactive
+
+    //TODO - Remove debug before production
+    fun printList(list:ArrayList<Habit>){
+        for (i in 0..list.size - 1){
+            Log.d(DEBUG, "${list[i].habitName} has ID ${list[i].habitID}")
+        }
+    }
+    fun dropHabit(habit: Habit){
+        var db: SQLiteDatabase = writableDatabase
+        val recordID = habit.habitID
+
+        db.delete(TABLE_HABITS, KEY_HABIT_ID+"=?", arrayOf(recordID.toString()))
     }
 
     fun createActivity(activity: Activity){
@@ -165,6 +192,15 @@ class HabitDataAdapter(context: Context): SQLiteOpenHelper(context,DATABASE_NAME
             } while(cursor.moveToNext())
         }
         return activity
+    }
+
+    fun daysElapsed(timeStamp:Long):Long {
+        val epochDay = (timeStamp/ TRUNCATE_TO_TODAY).toLong()
+        val dateStart = LocalDate.of(2017,1,1)
+        val dateNow = LocalDate.ofEpochDay(epochDay)
+        Log.d(DEBUG,"Time in Epoch Days = $dateNow")
+
+        return dateStart.until(dateNow, ChronoUnit.DAYS)
     }
 
 }

@@ -4,43 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.sherman.tony.seinfeldsuccesstracker.Activities.HabitActivity">
+    tools:context="org.sherman.tony.habittracker.Activities.HabitActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/relativeLayoutID1">
 
-        <Button
-            android:id="@+id/deleteHabitBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@android:color/holo_green_dark"
-            android:onClick="deleteHabit"
-            android:text="Delete Habit"
-            android:textAlignment="textStart"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+
 
         <Button
             android:id="@+id/addHabitBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="150dp"
             android:layout_marginTop="8dp"
             android:background="@android:color/holo_green_dark"
             android:onClick="addHabit"
             android:text="Add Habit"
             android:textColor="@android:color/white"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="18sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -58,6 +41,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </RelativeLayout>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        android:onClick="loadMain"
+        android:src="@android:drawable/ic_input_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>
 

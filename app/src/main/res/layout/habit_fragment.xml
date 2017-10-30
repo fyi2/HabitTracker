@@ -11,24 +11,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
-
         <ImageButton
-            android:id="@+id/habitDeleteButton"
+            android:id="@+id/habitActiveButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_toEndOf="@+id/habitNameID"
-            app:srcCompat="@android:drawable/btn_dialog"
-            tools:layout_editor_absoluteX="327dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/checkbox_off_background"
+            tools:layout_editor_absoluteX="2dp"
             tools:layout_editor_absoluteY="0dp" />
+
 
         <TextView
             android:id="@+id/habitNameID"
-            android:layout_width="281dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="52dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="8dp"
             android:text="TextView"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/habitScoreID"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="300dp"
+            android:layout_marginTop="8dp"
+            android:text="0/0"
+            android:textAlignment="center"
             android:textSize="18sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -2,7 +2,7 @@ package org.sherman.tony.habittracker.Data
 
 // Database (SQLite)
 
-val DATABASE_VERSION : Int = 1
+val DATABASE_VERSION : Int = 2
 val DATABASE_NAME: String = "seinfeld.db"
 val TABLE_HABITS: String = "jerry"
 val TABLE_ACTIVITIES:String = "kramer"
@@ -34,3 +34,6 @@ val SELECT_ALL_ACTIVITIES = "SELECT * FROM " + TABLE_ACTIVITIES
 
 // Constants
 val DEBUG = "DEBUG ===>>> "
+val EDIT_HABITS = 0
+val CHECK_HABITS = 1
+val TRUNCATE_TO_TODAY = 1000*60*60*24 // Divisor to get time in millsecs to just today with no time
