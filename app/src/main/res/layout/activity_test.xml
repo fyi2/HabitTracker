@@ -76,6 +76,32 @@
         tools:layout_editor_absoluteY="355dp" />
 
 
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="wrap_content"
+        android:layout_height="52dp"
+        android:text="GENERATE ACTIVITIES"
+        android:onClick="generateActivities"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/button4"
+        tools:layout_editor_absoluteY="355dp" />
+
+
+    <Button
+        android:id="@+id/button6"
+        android:layout_width="wrap_content"
+        android:layout_height="52dp"
+        android:text="DUMP ACTIVITIES"
+        android:onClick="dumpActivities"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/button5"
+        tools:layout_editor_absoluteY="355dp" />
+
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/homeBtn"

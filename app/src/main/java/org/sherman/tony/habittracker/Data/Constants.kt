@@ -2,7 +2,7 @@ package org.sherman.tony.habittracker.Data
 
 // Database (SQLite)
 
-val DATABASE_VERSION : Int = 2
+val DATABASE_VERSION : Int = 3
 val DATABASE_NAME: String = "seinfeld.db"
 val TABLE_HABITS: String = "jerry"
 val TABLE_ACTIVITIES:String = "kramer"

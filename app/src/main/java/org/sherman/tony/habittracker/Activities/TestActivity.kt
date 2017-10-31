@@ -12,6 +12,8 @@ import org.sherman.tony.habittracker.Data.HabitDataAdapter
 import org.sherman.tony.habittracker.Models.Activity
 import org.sherman.tony.habittracker.Models.Habit
 import org.sherman.tony.habittracker.R
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 class TestActivity : AppCompatActivity() {
@@ -19,6 +21,23 @@ class TestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
+    }
+
+    fun generateActivities(view: View) {
+    var db = HabitDataAdapter(applicationContext)
+        db.createRandomActivities()
+    }
+
+    fun dumpActivities(view: View) {
+        var db = HabitDataAdapter(applicationContext)
+        val habitList = db.readHabits()
+        for (i in 0..habitList.size - 1){
+            var activitesList = db.readActivityList(habitList[i].habitName.toString())
+            //Log.d(DEBUG,"for habit ${habitList[i].habitName.toString()} length of activities list is ${activitesList.size}")
+            for (j in 0..activitesList.size - 1){
+                Log.d(DEBUG,"J = $j and date is ${activitesList[j].activityDate!!.toLong()}")
+            }
+        }
     }
 
     fun addHabitRecord(view: View) {
@@ -63,7 +82,7 @@ class TestActivity : AppCompatActivity() {
         activity.activityHabitKey = 1
         activity.activityDate = today
 
-        db.createActivity(activity)
+        db.createActivityObj(activity)
     }
 
     fun readActivity(view: View) {
@@ -83,8 +102,6 @@ class TestActivity : AppCompatActivity() {
         if (switchState) {
             Log.d(DEBUG, "Toggle is on.")
         }
-
-
     }
 
     fun readRecord(view: View) {
@@ -104,12 +121,19 @@ class TestActivity : AppCompatActivity() {
         intent.putExtra("bundle", bundle)
         startActivity(intent)
         finish()
-
-
     }
 
     fun returnHome(view: View) {
         val intent = Intent(applicationContext, MainActivity::class.java)
         startActivity(intent)
+    }
+
+    fun humanDate(epoch: Long) : String {
+
+        var calendar: Calendar = Calendar.getInstance()
+
+        val dateFormat: DateFormat = SimpleDateFormat("MM/dd/yyy")
+
+        return dateFormat.format(epoch)
     }
 }

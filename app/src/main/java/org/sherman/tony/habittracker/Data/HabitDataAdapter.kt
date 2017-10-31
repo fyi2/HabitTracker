@@ -12,6 +12,7 @@ import org.sherman.tony.habittracker.Models.Activity
 import org.sherman.tony.habittracker.Models.Habit
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+import java.util.*
 
 
 class HabitDataAdapter(context: Context): SQLiteOpenHelper(context,DATABASE_NAME, null,DATABASE_VERSION) {
@@ -107,8 +108,6 @@ class HabitDataAdapter(context: Context): SQLiteOpenHelper(context,DATABASE_NAME
                 Log.d(DEBUG,habit.habitID.toString())
             }while (cursor.moveToNext())
         }
-        //db.close()
-        //printList(list)
         return list
     }
 
@@ -126,7 +125,23 @@ class HabitDataAdapter(context: Context): SQLiteOpenHelper(context,DATABASE_NAME
         db.delete(TABLE_HABITS, KEY_HABIT_ID+"=?", arrayOf(recordID.toString()))
     }
 
-    fun createActivity(activity: Activity){
+    fun createActivity(habit: String){
+        var db: SQLiteDatabase = writableDatabase
+        var values = ContentValues()
+
+        val habitObj = readHabit(habit)
+        var activity = Activity()
+
+        activity.activityDate = Calendar.getInstance().timeInMillis
+        activity.activityHabitKey = habitObj.habitID
+
+        values.put(KEY_DATE, activity.activityDate)
+        values.put(KEY_ACTIVEHABIT_ID,activity.activityHabitKey)
+
+        db.insert(TABLE_ACTIVITIES,null, values)
+    }
+
+    fun createActivityObj(activity: Activity){
         var db: SQLiteDatabase = writableDatabase
         var values = ContentValues()
 
@@ -134,7 +149,6 @@ class HabitDataAdapter(context: Context): SQLiteOpenHelper(context,DATABASE_NAME
         values.put(KEY_ACTIVEHABIT_ID,activity.activityHabitKey)
 
         db.insert(TABLE_ACTIVITIES,null, values)
-
     }
 
     fun readActivity(position: Int): Activity{
@@ -154,11 +168,11 @@ class HabitDataAdapter(context: Context): SQLiteOpenHelper(context,DATABASE_NAME
     }
 
 
-    fun readLatestActivity(habitName: String):Activity {
+    fun readActivityList(habitName: String):ArrayList<Activity> {
         var db: SQLiteDatabase = readableDatabase
         var habit = Habit()
-        var activity = Activity()
-        var activityDate:Long = 0
+
+
 
         // Read the habit matching String
         val QUERY_STR1 = "SELECT * FROM " + TABLE_HABITS+" WHERE $KEY_HABIT_NAME="+"'$habitName'"
@@ -175,32 +189,98 @@ class HabitDataAdapter(context: Context): SQLiteOpenHelper(context,DATABASE_NAME
         }
         // Return the latest
         val QUERY_STR2 = "SELECT * FROM "+ TABLE_ACTIVITIES+" WHERE $KEY_ACTIVEHABIT_ID="+habit.habitID
+        var activityList = ArrayList<Activity>()
 
-        activity.activityDate = 0L
         cursor = db.rawQuery(QUERY_STR2,null)
         if (cursor.moveToFirst()){
             do {
-                activityDate = cursor.getLong(cursor.getColumnIndex(KEY_DATE))
-                Log.d(DEBUG,"FOUND ${activity.activityDate}")
-                if(activityDate > activity.activityDate!!){
-                    activity.activityDate = activityDate
-                    activity.activityHabitKey = cursor.getInt(cursor.getColumnIndex(KEY_ACTIVEHABIT_ID))
-                    activity.activityID = cursor.getInt(cursor.getColumnIndex(KEY_ACTIVITY_ID))
-                    Log.d(DEBUG,"reviewing ${activity.activityDate}")
-                    activityDate = activity.activityDate!!
-                }
-            } while(cursor.moveToNext())
+                var activity = Activity()
+
+                activity.activityDate = cursor.getLong(cursor.getColumnIndex(KEY_DATE))
+                activity.activityHabitKey = cursor.getInt(cursor.getColumnIndex(KEY_ACTIVEHABIT_ID))
+                activity.activityID = cursor.getInt(cursor.getColumnIndex(KEY_ACTIVITY_ID))
+
+                activityList.add(activity)
+            }while(cursor.moveToNext())
         }
-        return activity
+        return activityList
+    }
+
+    fun activityCount(habit: String):Int{
+        var activityList:ArrayList<Activity>
+
+        activityList = readActivityList(habit)
+
+        return activityList.size
+    }
+
+    fun sienfeldCount(habit: String):Int {
+        var activityList:ArrayList<Activity>
+
+        activityList = readActivityList(habit)
+        activityList.sortByDescending { it.activityDate }
+
+        val elapsedList = buildElapsedList(activityList)
+
+        return sienfeldNumber(elapsedList)
+    }
+
+    fun sienfeldNumber(elapsedList: ArrayList<Int>): Int {
+        var counter = 0
+        var sum = 0
+        if (elapsedList.isEmpty()){
+            return 0
+        } else {
+            do{
+                sum++
+                counter++
+            }while (elapsedList[counter]==1 && (counter < elapsedList.size - 1))
+        }
+        return sum
+    }
+
+    fun buildElapsedList(activityList:ArrayList<Activity>):ArrayList<Int>{
+        var elapsedList = ArrayList<Int>()
+        if(activityList.size > 1){
+            for(i in 0..activityList.size-2){
+                val d1 = daysElapsed(activityList[i].activityDate!!)
+                val d2 = daysElapsed(activityList[i+1].activityDate!!)
+                val gap = (d1-d2).toInt()
+                elapsedList.add(gap)
+            }
+        }
+        return elapsedList
     }
 
     fun daysElapsed(timeStamp:Long):Long {
         val epochDay = (timeStamp/ TRUNCATE_TO_TODAY).toLong()
         val dateStart = LocalDate.of(2017,1,1)
         val dateNow = LocalDate.ofEpochDay(epochDay)
-        Log.d(DEBUG,"Time in Epoch Days = $dateNow")
+        Log.d(DEBUG,"Time in Epoch Days = $epochDay which is date $dateNow")
 
         return dateStart.until(dateNow, ChronoUnit.DAYS)
     }
 
+    fun createRandomActivities() {
+        val min = 1
+        val max = 30
+        val recordNumber = 25
+        val habitsList = readHabits()
+
+        var rand  = Random()
+
+        for (i in 0..habitsList.size-1){
+            for(j in 1..recordNumber){
+                var activity = Activity()
+                var date = Calendar.getInstance()
+                var randomNumber = rand.nextInt( max - min + 1) + min
+                activity.activityHabitKey = habitsList[i].habitID
+                date.add(Calendar.DATE, -randomNumber)
+                activity.activityDate = date.timeInMillis
+                createActivityObj(activity)
+                Log.d(DEBUG, "Created ${habitsList[i].habitName} with key ${activity.activityHabitKey} at time ${activity.activityDate}")
+            }
+        }
+        Log.d(DEBUG,"$recordNumber random records created")
+    }
 }

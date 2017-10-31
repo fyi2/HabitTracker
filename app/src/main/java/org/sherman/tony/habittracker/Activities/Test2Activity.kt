@@ -35,13 +35,16 @@ class Test2Activity : AppCompatActivity() {
                 activityCompletedID.text = activity.activityHabitKey.toString()
                 dateCompletedID.text = activity.activityDate.toString()
             }
+            /*
+            TODO
+
             readLatestActivity -> {
                 val habitName = intent.getStringExtra("habitName")
                 val activity = db.readLatestActivity(habitName)
                 activityNameID.text = activity.activityID.toString()
                 activityCompletedID.text = activity.activityHabitKey.toString()
                 dateCompletedID.text = activity.activityDate.toString()
-            }
+            } */
         }
     }
 

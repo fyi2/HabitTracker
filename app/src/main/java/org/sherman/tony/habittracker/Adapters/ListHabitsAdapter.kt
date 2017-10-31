@@ -75,6 +75,7 @@ class ListHabitsAdapter(val list:ArrayList<Habit>, context: Context, requestType
         var habitName = itemView.findViewById<TextView>(R.id.habitNameID)
         var deleteButton = itemView.findViewById<ImageButton>(R.id.habitDeleteButton)
         var doneButton = itemView.findViewById<ImageButton>(R.id.habitActiveButton)
+        var scoreID = itemView.findViewById<TextView>(R.id.habitScoreID)
 
 
 
@@ -107,13 +108,17 @@ class ListHabitsAdapter(val list:ArrayList<Habit>, context: Context, requestType
                     }
                     doneButton!!.id -> {
                         doneButton.setImageResource(android.R.drawable.checkbox_on_background)
-                        // Update Activity Record
-                        // Check if all are done, if so update Siendfeld number
-
                     }
                 }
             } else {
                 doneButton.setImageResource(android.R.drawable.checkbox_on_background)
+                // Update Activity Record
+                dbHandler.createActivity(habitName.text.toString())
+                // Update Habit Siendfeld number
+                val sCount = dbHandler.sienfeldCount(habitName.text.toString())
+                scoreID.text = sCount.toString()
+                // Check for a Sienfeld Day
+
             }
         }
 

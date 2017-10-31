@@ -4,8 +4,4 @@
     <item
         android:id="@+id/menuHabitID"
         android:title="@string/menuHabit" />
-    <item
-        android:id="@+id/settingsID"
-        android:title="@string/menuSettings" />
-
 </menu>
